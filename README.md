@@ -1,17 +1,51 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
 
-# Run and deploy your AI Studio app
 
-This contains everything you need to run your app locally.
 
-View your app in AI Studio: https://ai.studio/apps/temp/1
 
-## Run Locally
+# LegiTrail 
 
-**Prerequisites:**  Node.js
+LegiTrail helps travelers know the laws of any country, including lesser-known rules, so they can stay informed and avoid trouble. Powered by **Gemini AI and intelligent search**, the app delivers real-time legal guidance in actionable categories: Do’s, Don’ts, Warnings, and Info.
 
+---
+
+## What It Does
+
+- Explore laws for any country around the world.  
+- Highlights common and unusual rules clearly.  
+- Provides actionable guidance for travelers to stay safe.  
+
+---
+
+## How We Built It
+
+- **Front-end:** React + TypeScript (.tsx)  
+- **Styling:** TailwindCSS for a clean, responsive interface  
+- **Powered by:** Gemini AI + search to fetch, analyze, and structure legal rules  
+- **Visualization:** Cards for Do’s, Don’ts, Warnings, and Info  
+
+---
+
+## Challenges
+
+- Organizing laws without overwhelming users.  
+- Ensuring clarity and reliability of legal guidance.  
+- Designing a visually distinct UI for different categories.  
+
+---
+
+## Accomplishments
+
+- Created a **real-time legal guide** for travelers.  
+- Integrated **Gemini AI** to deliver actionable insights instantly.  
+- Built a **user-friendly and responsive interface**.  
+
+---
+
+## Getting Started
+
+1. Clone the repo:  
+   ```bash
+   git clone https://github.com/Abdurehman-01/LegiTrail.git
 
 1. Install dependencies:
    `npm install`
