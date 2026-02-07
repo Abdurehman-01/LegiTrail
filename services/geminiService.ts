@@ -1,53 +1,42 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
-import { LawResponse, GroundingChunk } from "../types";
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
-export const fetchLawData = async (country: string): Promise<LawResponse> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  
+if (!API_KEY) {
+  throw new Error("API Key missing. Please add VITE_GEMINI_API_KEY to your .env.local file and restart your server.");
+}
+
+const genAI = new GoogleGenerativeAI(API_KEY);
+
+export const fetchLawData = async (country: string) => {
+  const model = genAI.getGenerativeModel({ 
+    model: "gemini-2.5-flash",
+    generationConfig: { temperature: 0.4 } 
+  });
+
   const prompt = `
-    Act as a Global Safety Officer. Provide a high-impact, short legal guide for travelers in ${country}.
-    
-    CRITICAL: Use Google Search to find real, specific laws.
-    
+    Generate a legal safety guide for travelers in ${country}.
     FORMAT RULES:
-    - Use EXACTLY these section headers starting with ##.
-    - Each point MUST be a single, punchy line.
-    - Start each point with one of these tags: [DO], [DON'T], or [WARNING].
-    - Follow the tag with a short description and the specific penalty/consequence.
+    1. Use ## for section titles.
+    2. Every bullet point MUST start with exactly [DO], [DONT], [WARNING], or [INFO].
+    3. Keep points short and high-impact.
     
     Example:
-    [DON'T] Chewing gum in public. Penalty: Heavy fines or arrest.
-    
-    REQUIRED SECTIONS:
-    ## 🚨 High Risk (Arrest/Deportation)
-    ## 📵 Public Conduct & Restricted Areas
-    ## 🚗 Transit & Transport Rules
-    ## 💡 Cultural Etiquette & Local Norms
-    ## 🧐 Unusual & Lesser Known Laws
-    
-    Keep text short. No long paragraphs. Use Search Grounding for accuracy.
+    ## Local Customs
+    - [DO] Dress modestly when visiting temples.
+    - [DONT] Take photos of military installations.
+    - [WARNING] Public displays of affection can lead to fines.
   `;
 
   try {
-    const response: GenerateContentResponse = await ai.models.generateContent({
-      model: "gemini-3-pro-preview",
-      contents: prompt,
-      config: {
-        tools: [{ googleSearch: {} }],
-        temperature: 0.1,
-      },
-    });
-
-    const text = response.text || "No data found.";
-    const sources = (response.candidates?.[0]?.groundingMetadata?.groundingChunks as GroundingChunk[]) || [];
-
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
     return {
-      text,
-      sources,
+      text: response.text(),
+      sources: response.candidates?.[0]?.citationMetadata?.citationSources || []
     };
-  } catch (error) {
-    console.error("Gemini API Error:", error);
-    throw new Error("Safety database offline. Try again shortly.");
+  } catch (error: any) {
+    console.error("Gemini Fetch Error:", error);
+    throw new Error(error.message || "Failed to reach Safety Servers.");
   }
 };
