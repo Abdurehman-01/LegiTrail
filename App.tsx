@@ -175,7 +175,7 @@ const App: React.FC = () => {
             <div className="bg-slate-900 p-2 rounded-lg text-white">
               <Scale size={18} />
             </div>
-            <span className="text-lg font-black tracking-tighter">SafetyNavigator</span>
+            <span className="text-lg font-black tracking-tighter">LegiTrail</span>
           </button>
           
           {selectedCountry && !loading && (
